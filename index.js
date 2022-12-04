@@ -1,5 +1,23 @@
-function game() {
-    var sqr = document.getElementById("sqr")
+var st = document.getElementById("start")
+var speed = document.getElementById("speed")
+var sqr = document.getElementById("sqr")
+var startgamediv = document.getElementById("startgamediv")
+var resetdiv = document.getElementById("resetdiv")
+var btnreset = document.getElementById("btnreset")
+speed.value = 1
+st.addEventListener("click", () => {
+
+    if (Number(speed.value) > 5 || Number(speed.value) < 1) {
+        alert("from 1 to 5")
+        window.location.reload()
+    }
+    game(Number(speed.value))
+})
+
+function game(speedgame) {
+
+    sqr.style.display = "block";
+    startgamediv.style.display = "none"
 
     function getPosStyle(el, name) {
         let s = getComputedStyle(el)
@@ -19,8 +37,8 @@ function game() {
     let movein;
     let ismovedleft = false
     let ismovetop = false
-    let width = window.innerWidth - 100
-    let height = window.innerHeight - 100
+    let width = window.innerWidth - 95
+    let height = window.innerHeight - 95
     let clickmovetop = false
     let clickmoveleft = false
     let clickmoveright = true
@@ -29,27 +47,27 @@ function game() {
     function stop() {
 
         if (ismovedleft == true) {
-            if (getPosStyle(sqr, "left") == width) {
+            if (getPosStyle(sqr, "left") >= width) {
                 clearInterval(movein)
                 clickmoveright = false
-                alert("you lose")
-            } else if (getPosStyle(sqr, "left") == 0) {
+                reset()
+            } else if (getPosStyle(sqr, "left") < 0 - speedgame) {
                 clearInterval(movein)
                 clickmoveleft = false
-                alert("you lose")
+                reset()
             }
             ismovedleft = false
 
         }
         if (ismovetop == true) {
-            if (getPosStyle(sqr, "top") == height) {
+            if (getPosStyle(sqr, "top") >= height) {
                 clearInterval(movein)
                 clickmovebottom = false
-                alert("you lose")
-            } else if (getPosStyle(sqr, "top") == 0) {
+                reset()
+            } else if (getPosStyle(sqr, "top") < 0 + speedgame) {
                 clearInterval(movein)
                 clickmovetop = false
-                alert("you lose")
+                reset()
             }
             ismovetop = false
 
@@ -61,22 +79,22 @@ function game() {
         movein = setInterval(function() {
             if (way == "top") {
                 ismovetop = true
-                var news = getPosStyle(sqr, "top") - 1
+                var news = getPosStyle(sqr, "top") - speedgame
                 sqr.style.top = news + "px";
                 clickmovebottom = true
             } else if (way == "left") {
                 ismovedleft = true
-                var news = getPosStyle(sqr, "left") - 1
+                var news = getPosStyle(sqr, "left") - speedgame
                 sqr.style.left = news + "px";
                 clickmoveright = true
             } else if (way == "right") {
                 ismovedleft = true
-                var news = getPosStyle(sqr, "left") + 1
+                var news = getPosStyle(sqr, "left") + speedgame
                 sqr.style.left = news + "px";
                 clickmoveleft = true
             } else if (way == "bottom") {
                 ismovetop = true
-                var news = getPosStyle(sqr, "top") + 1
+                var news = getPosStyle(sqr, "top") + speedgame
                 sqr.style.top = news + "px";
                 clickmovetop = true
             }
@@ -102,4 +120,11 @@ function game() {
 
     })
 }
-game()
+
+function reset() {
+    sqr.style.display = "none"
+    resetdiv.style.display = "flex"
+    btnreset.addEventListener("click", () => {
+        window.location.reload()
+    })
+}
